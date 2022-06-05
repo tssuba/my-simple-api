@@ -1,6 +1,6 @@
 ### Dependencies
 
-* Postgresql
+* Postgresql (Username:postgres, password:Tanmay123)
 
 ### Get it running
 

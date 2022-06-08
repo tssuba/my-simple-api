@@ -19,7 +19,7 @@ engine = _sql.create_engine("postgresql://postgres:Tanmay123@localhost/item_db",
     echo = True
 )
 
-SessionLocal = _orm.sessionmaker(bind = engineNews)
+SessionLocal = _orm.sessionmaker(bind = engine)
 
 Base = _declarative.declarative_base()
 

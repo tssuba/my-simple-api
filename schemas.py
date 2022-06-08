@@ -1,10 +1,10 @@
 import pydantic as _pydantic
 
 class _ArticleBase(_pydantic.BaseModel):
-    link: str
-    published_date = str
-    publisher = str
-    title = str
+    published_date:str
+    link:str
+    publisher:str
+    title:str
 
 
 class ArticleCreate(_ArticleBase):

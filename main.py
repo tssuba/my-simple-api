@@ -1,20 +1,50 @@
-from fastapi import FastAPI, status, HTTPException
+from fastapi import status, HTTPException
 from pydantic import BaseModel
 from typing import List 
 from database import SessionLocal
-import models
 
-app = FastAPI()
+import models
+import fastapi as _fastapi
+import sqlalchemy.orm as _orm
+
+import services as _services, schemas as _schemas
+
+app = _fastapi.FastAPI()
 
 class Item(BaseModel):
     id:int
     name:str
 
     class Config:
-        orm_mode=True
+        _fastapi.orm_mode=True
 
 
+
+# _services.create_database()
 db = SessionLocal()
+
+@app.post("/news", response_model = _schemas.Article)
+async def create_article(
+    article: _schemas.ArticleCreate,
+    db: _orm.Session = _fastapi.Depends(_services.get_db)
+):
+    return await _services.create_article(db = db, article = article)
+
+
+@app.get("/news", response_model = List[_schemas.Article])
+async def get_leads(
+    db: _orm.Session = _fastapi.Depends(_services.get_db)
+):
+    return await _services.get_articles(db = db)
+
+
+@app.delete("/news", status_code=204)
+async def delete_all_articles(
+    db: _orm.Session = _fastapi.Depends(_services.get_db)
+):
+    await _services.delete_all_articles(db)
+    return {"message", "Successfully Deleted"}
+
 
 @app.get('/items',response_model=List[Item], status_code = 200)
 def get_all_items():

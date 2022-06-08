@@ -1,6 +1,7 @@
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import sqlalchemy as _sql
+import sqlalchemy.ext.declarative as _declarative
+import sqlalchemy.orm as _orm
+
 
 # host = os.environ["POSTGRES_HOST"]
 # port = os.environ["POSTGRES_PORT"]
@@ -13,11 +14,14 @@ from sqlalchemy.orm import sessionmaker
 
 # engine = create_engine(SQLALCHEMY_DATABASE_URI)
 
-engine = create_engine("postgresql://postgres:Tanmay123@localhost/item_db", 
+
+engine = _sql.create_engine("postgresql://postgres:Tanmay123@localhost/item_db", 
     echo = True
 )
 
-Base = declarative_base()
+SessionLocal = _orm.sessionmaker(bind = engine)
 
-SessionLocal = sessionmaker(bind = engine)
+Base = _declarative.declarative_base()
+
+
 

@@ -32,7 +32,7 @@ async def create_article(
 
 
 @app.get("/news", response_model = List[_schemas.Article])
-async def get_leads(
+async def get_articles(
     db: _orm.Session = _fastapi.Depends(_services.get_db)
 ):
     return await _services.get_articles(db = db)

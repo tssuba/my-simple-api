@@ -28,17 +28,17 @@ async def create_article(db: _orm.Session, article: _schemas.ArticleCreate):
     return _schemas.Article.from_orm(article)
 
 
-# async def fetch_articles(db: _orm.Session, articles: List[GoogleNewsArticle]):
-#     for article in articles:
-#         currentArticle = _models.Article(**article.dict())
-#         db.add(currentArticle)
+async def fetch_articles(db: _orm.Session, articles: List[GoogleNewsArticle]):
 
-#     # article = _models.Article(**article.dict())
-#     # db.add(article)
-#     _goo
-#     db.commit()
-#     # news = db.query(_models.Article)
-#     # return list(map(_schemas.Article.from_orm, news))
+    obj_list = []
+    data_list = articles
+    for record in data_list:
+        data_obj = _models.Article(**record)
+        obj_list.append(data_obj)
+        db.add(data_obj)
+    db.commit()
+    news = db.query(_models.Article)
+    return list(map(_schemas.Article.from_orm, news))
 
 
 async def get_articles(db: _orm.Session):

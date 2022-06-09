@@ -10,10 +10,10 @@ from sqlalchemy import String, Boolean, Integer, Column, Text
 class Article(_database.Base):
     __tablename__ = "articles"
     id = _sql.Column(_sql.Integer, primary_key=True, index=True)
-    link = _sql.Column(_sql.String, index=True)
-    published_date = _sql.Column(_sql.String, index=True)
-    publisher = _sql.Column(_sql.String, index=True)
-    title = _sql.Column(_sql.String, index=True)
+    link = _sql.Column(_sql.String, index=True, default="")
+    published_date = _sql.Column(_sql.String, index=True, default="")
+    publisher = _sql.Column(_sql.String, index=True, default="")
+    title = _sql.Column(_sql.String, index=True, default="")
 
 
 class Item(Base):

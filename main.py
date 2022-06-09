@@ -38,11 +38,12 @@ async def create_article(
     return await _services.create_article(db = db, article = article)
 
 
-@app.get("/news/test", response_model = List[GoogleNewsArticle]) #
+@app.get("/news/test") # , response_model = List[GoogleNewsArticle]
 async def fetch_articles(
-    # db: _orm.Session = _fastapi.Depends(_services.get_db)
+    # articles = fetched_articles,
+    db: _orm.Session = _fastapi.Depends(_services.get_db)
 ):
-    return fetched_articles # await _services.fetch_articles(db = db, articles = fetched_articles)
+    return await _services.fetch_articles(db = db, articles = fetched_articles) # 
 
 
 @app.get("/news", response_model = List[_schemas.Article])

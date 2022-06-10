@@ -36,7 +36,6 @@ async def fetch_articles(db: _orm.Session, articles: List[GoogleNewsArticle]):
     for record in data_list:
         data_obj = _models.Article(**record)
         obj_list.append(data_obj)
-        # db.add(data_obj)
     db.add_all(obj_list)
     db.commit()
     news = db.query(_models.Article)

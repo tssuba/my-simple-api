@@ -16,8 +16,6 @@ query = "Carbon Net Zero"
 
 google_scaper = GoogleNewsScraper(query)
 
-fetched_articles = google_scaper.scrape_articles()
-
 class Item(BaseModel):
     id:int
     name:str
@@ -26,9 +24,8 @@ class Item(BaseModel):
         _fastapi.orm_mode=True
 
 
-
-# _services.create_database()
 db = SessionLocal()
+
 
 @app.post("/news", response_model = _schemas.Article)
 async def create_article(
@@ -41,10 +38,10 @@ async def create_article(
 @app.get("/news/test") # , response_model = List[GoogleNewsArticle]
 async def fetch_articles(
     # articles = fetched_articles,
-    db: _orm.Session = _fastapi.Depends(_services.get_db)
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
     _services.create_database()
-    return await _services.fetch_articles(db = db, articles = fetched_articles) # 
+    return await _services.fetch_articles(db = db, articles = google_scaper.scrape_articles()) # 
 
 
 @app.get("/news", response_model = List[_schemas.Article])

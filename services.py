@@ -43,7 +43,8 @@ async def fetch_articles(db: _orm.Session, articles: List[GoogleNewsArticle]):
 
 
 async def get_articles(db: _orm.Session):
-    articles = db.query(_models.Article)
+    # query = Article.select().order_by(Article.c.id.desc()).limit(25)
+    articles = db.query(_models.Article).order_by(Article.id.desc()).limit(25)
 
     return list(map(_schemas.Article.from_orm, articles))
 

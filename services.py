@@ -1,5 +1,6 @@
 from typing import List, Dict, Union
 from GoogleNewsScaper import GoogleNewsArticle, GoogleNewsScraper
+from models import Article,  Item
 
 import fastapi as _fastapi
 import datetime as _dt
@@ -35,7 +36,8 @@ async def fetch_articles(db: _orm.Session, articles: List[GoogleNewsArticle]):
     for record in data_list:
         data_obj = _models.Article(**record)
         obj_list.append(data_obj)
-        db.add(data_obj)
+        # db.add(data_obj)
+    db.add_all(obj_list)
     db.commit()
     news = db.query(_models.Article)
     return list(map(_schemas.Article.from_orm, news))

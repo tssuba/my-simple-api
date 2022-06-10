@@ -43,6 +43,7 @@ async def fetch_articles(
     # articles = fetched_articles,
     db: _orm.Session = _fastapi.Depends(_services.get_db)
 ):
+    _services.create_database()
     return await _services.fetch_articles(db = db, articles = fetched_articles) # 
 
 

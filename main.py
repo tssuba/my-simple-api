@@ -1,7 +1,8 @@
 from fastapi import status, HTTPException
 from pydantic import BaseModel
-from typing import List 
+from typing import List, Dict, Union
 from database import SessionLocal
+from GoogleNewsScaper import GoogleNewsArticle, GoogleNewsScraper
 
 import models
 import fastapi as _fastapi
@@ -11,6 +12,10 @@ import services as _services, schemas as _schemas
 
 app = _fastapi.FastAPI()
 
+query = "Carbon Net Zero"
+
+google_scaper = GoogleNewsScraper(query)
+
 class Item(BaseModel):
     id:int
     name:str
@@ -19,9 +24,8 @@ class Item(BaseModel):
         _fastapi.orm_mode=True
 
 
-
-# _services.create_database()
 db = SessionLocal()
+
 
 @app.post("/news", response_model = _schemas.Article)
 async def create_article(
@@ -29,6 +33,15 @@ async def create_article(
     db: _orm.Session = _fastapi.Depends(_services.get_db)
 ):
     return await _services.create_article(db = db, article = article)
+
+
+@app.get("/news/test") # , response_model = List[GoogleNewsArticle]
+async def fetch_articles(
+    # articles = fetched_articles,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    _services.create_database()
+    return await _services.fetch_articles(db = db, articles = google_scaper.scrape_articles()) # 
 
 
 @app.get("/news", response_model = List[_schemas.Article])

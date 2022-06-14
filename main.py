@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List, Dict, Union
 from database import SessionLocal
 from GoogleNewsScaper import GoogleNewsArticle, GoogleNewsScraper
+from RecentJournalsScaper import ResearchArticle, RecentJournalsScraper
 
 import models
 import fastapi as _fastapi
@@ -15,6 +16,8 @@ app = _fastapi.FastAPI()
 query = "Carbon Net Zero"
 
 google_scaper = GoogleNewsScraper(query)
+
+research_scaper = RecentJournalsScraper()
 
 class Item(BaseModel):
     id:int
@@ -35,13 +38,22 @@ async def create_article(
     return await _services.create_article(db = db, article = article)
 
 
-@app.get("/news/test") # , response_model = List[GoogleNewsArticle]
+@app.get("/news/fetch") # , response_model = List[GoogleNewsArticle]
 async def fetch_articles(
     # articles = fetched_articles,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
     _services.create_database()
-    return await _services.fetch_articles(db = db, articles = google_scaper.scrape_articles()) # 
+    return await _services.fetch_articles(db = db, articles = google_scaper.scrape_articles()) #
+
+
+@app.get("/research/fetch")
+async def fetch_research_articles(
+    # articles = fetched_articles,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    _services.create_database()
+    return await _services.fetch_research_articles(db = db, articles = research_scaper.scrape_scopus())
 
 
 @app.get("/news", response_model = List[_schemas.Article])
@@ -51,12 +63,34 @@ async def get_articles(
     return await _services.get_articles(db = db)
 
 
-@app.delete("/news", status_code=204)
+@app.get("/research", response_model = List[_schemas.ResearchArticle])
+async def get_research_articles(
+    db: _orm.Session = _fastapi.Depends(_services.get_db)
+):
+    return await _services.get_research_articles(db = db)
+
+
+@app.delete("/news") # , status_code=204 produces an error?
 async def delete_all_articles(
     db: _orm.Session = _fastapi.Depends(_services.get_db)
 ):
     await _services.delete_all_articles(db)
     return {"message", "Successfully Deleted"}
+
+
+@app.delete("/research") # , status_code=204
+async def delete_all_research_articles(
+    db: _orm.Session = _fastapi.Depends(_services.get_db)
+):
+    await _services.delete_all_research_articles(db)
+    return {"message", "Successfully Deleted"}
+
+
+
+
+
+
+
 
 
 @app.get('/items',response_model=List[Item], status_code = 200)

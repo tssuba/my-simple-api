@@ -16,6 +16,15 @@ class Article(_database.Base):
     title = _sql.Column(_sql.String, index=True, default="")
 
 
+class ResearchArticle(_database.Base):
+    __tablename__ = "research"
+    id = _sql.Column(_sql.Integer, primary_key=True, index=True)
+    doi = _sql.Column(_sql.String, index=True, default="")
+    published_date = _sql.Column(_sql.String, index=True, default="")
+    publisher = _sql.Column(_sql.String, index=True, default="")
+    title = _sql.Column(_sql.String, index=True, default="")
+
+
 class Item(Base):
     __tablename__ = 'items'
     id = Column(Integer, primary_key = True)
